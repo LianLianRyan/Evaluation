@@ -73,21 +73,29 @@ const Controller = ((view, model) => {
       
       totalCreditElement.textContent = `Total Credit: ${totalCredits}`;
       
-      if (totalCredits > 18) {
-          alert("You cannot choose more than 18 credits in one semester!");
-      }
-      
       return totalCredits;
   };
 
   const toggleCourseSelection = () => {
-      document.addEventListener('click', event => {
+    const courseContainer = document.querySelector('.available-courses'); 
+      courseContainer.addEventListener('click', event => {
           const target = event.target;
           if (target.classList.contains('dynamic-list-item')) {
-              target.classList.toggle('selected');
-              updateCreditTotal();
-              target.style.backgroundColor = target.classList.contains('selected') ? 'cornflowerblue' : '';
-          }
+            const courseCredit = parseInt(target.dataset.credit);  
+            const isCurrentlySelected = target.classList.contains('selected'); 
+            const currentTotal = updateCreditTotal();  
+            const newTotal = isCurrentlySelected ? currentTotal - courseCredit : currentTotal + courseCredit; 
+        
+            
+            if (!isCurrentlySelected && newTotal > 18) {
+                alert("You can only choose up to 18 credits in one semester!");
+                return; 
+            }
+        
+            target.classList.toggle('selected');  
+            updateCreditTotal();  
+            target.style.backgroundColor = target.classList.contains('selected') ? 'cornflowerblue' : '';  
+        }
       });
   };
 
@@ -96,20 +104,23 @@ const Controller = ((view, model) => {
   });
 
   const handleCourseSelection = () => {
-      const selectButton = document.getElementById('selectButton');
-      selectButton.addEventListener('click', () => {
-          const totalCredits = updateCreditTotal();
-          if (totalCredits > 18) {
-              alert("You cannot choose more than 18 credits in one semester!");
-          } else {
-              const confirmation = confirm(`You have chosen ${totalCredits} credits for this semester. You cannot unselect once you submit. Do you want to confirm?`);
-              if (confirmation) {
-                  displaySelectedCourses();
-                  selectButton.disabled = true;
-              }
-          }
-      });
-  };
+    const selectButton = document.getElementById('selectButton');
+    
+    selectButton.addEventListener('click', () => {
+        const totalCredits = updateCreditTotal(); 
+        
+        const confirmation = confirm(`You have chosen ${totalCredits} credits for this semester. You cannot unselect once you submit. Do you want to confirm?`);
+        
+        if (confirmation) {
+            displaySelectedCourses();
+            selectButton.classList.add('selectButton-disabled'); 
+            selectButton.disabled = true; 
+        }
+    });
+};
+
+      
+
 
   const displaySelectedCourses = () => {
       const selectedCourses = document.querySelectorAll('.dynamic-list-item.selected');
