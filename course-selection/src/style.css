@@ -98,6 +98,10 @@ li {
     font-weight: bold;
 }
 
+.dynamic-list-item.selected {
+    background-color: deepskyblue;
+}
+
 .button-container {
     display: flex;
     justify-content: center; 
@@ -106,7 +110,8 @@ li {
 }
 
 .button-container h2 {
-    margin-right: 10px; 
+    margin-top: 10px;
+    margin-right: 20px; 
 }
 
 .button-container button {
@@ -118,6 +123,11 @@ li {
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.button-container button.selectButton-disabled {
+    background-color: grey !important; 
+    cursor: not-allowed;
 }
 
 .button-container button:hover {
